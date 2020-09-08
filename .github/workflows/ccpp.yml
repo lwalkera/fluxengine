@@ -28,14 +28,19 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-    - uses: numworks/setup-msys2@v1
+    - uses: msys2/setup-msys2@v2
       with:
+        msystem: MSYS
+        update: true
+        install: base-devel git make mingw-w64-i686-ninja mingw-w64-i686-libusb mingw-w64-i686-sqlite3 mingw-w64-i686-zlib mingw-w64-i686-gcc zip which ninja bash mingw-w64-x86_64-ninja
         path-type: inherit
-    - uses: actions/checkout@v1
-    - name: pacman
-      run: |
-        msys2do pacman -S --noconfirm --needed make ninja mingw-w64-i686-libusb mingw-w64-i686-sqlite3 mingw-w64-i686-zlib mingw-w64-i686-gcc zip
+    - uses: actions/checkout@v2
     - name: build
+      shell: bash
       run: |
-        msys2do make
+        echo $PATH
+        export PATH=$PATH:/msys64/usr/bin
+        find / -name ninja\*
+        which ninja
+        make
 
